@@ -1834,7 +1834,15 @@ TheOperators->Add("=",
  Add<pfes3*>("nt",".",new OneOperator1<long,pfes3*>(pVh3_nt));
  Add<pfes3*>("ndofK",".",new OneOperator1<long,pfes3*>(pVh3_ndofK));
     Add<pfes3*>("Th",".",new OneOperator1<pmesh3,pfes3*>(pVh3_Th));
-    
+   
+// Surface FEs
+
+Add<pfesS*>("ndof",".",new OneOperator1<long,pfesS*>(pVhS_ndof));
+Add<pfesS*>("nt",".",new OneOperator1<long,pfesS*>(pVhS_nt));
+Add<pfesS*>("ndofK",".",new OneOperator1<long,pfesS*>(pVhS_ndofK));
+Add<pfesS*>("Th",".",new OneOperator1<pmeshS,pfesS*>(pVhS_Th));
+
+ 
  //Add<pf3rbasearray*>("[","",new OneOperator2_<pf3rbase*,pf3rbasearray*,long>(get_element));
  //Add<pf3rarray>("[","",new OneOperator2_<pf3r,pf3rarray,long>(get_element));
  //Add<pf3carray>("[","",new OneOperator2_<pf3c,pf3carray,long>(get_element));
