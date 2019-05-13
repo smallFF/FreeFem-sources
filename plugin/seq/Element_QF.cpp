@@ -27,13 +27,16 @@
 
 #include "ff++.hpp"
 #include "AddNewFE.h"
-// Finite element on Quadrature Formula
-// to optimize computation
+// Finite element on Quadrature Formula ...
+// to optimize computation ...
+/// ---------------------------------------------------------------
 namespace  Fem2D {
+	// -------------------
 	class TypeOfFE_QF2d: public TypeOfFE {
 		public:
 			static int*DataQF2d (int n) {
-				int *p = new int[n * 5 + 3];
+				int *d = new int[n * 5 + 3];
+				int *p = d;
 
 				for (int i = 0; i < n; ++i) {
 					*p++ = 6;
@@ -58,7 +61,7 @@ namespace  Fem2D {
 				*p++ = 0;
 				*p++ = 0;
 				*p++ = n;
-				return p;
+				return d;
 			}
 
 			typedef GQuadratureFormular<R2> QF;
@@ -138,6 +141,7 @@ namespace  Fem2D {
 					val(k, 0, op_id) = 1;
 				}
 			}
+
 	};
 
 	class TypeOfFE_QF3d: public GTypeOfFE<Mesh3>
@@ -218,6 +222,7 @@ namespace  Fem2D {
 				int kk = ijP(this->PtInterpolation[l]);
 				if (kk != l) {
 					err++;
+					// cout << " Erreur search TypeOfFE_QF3d loose point " << l <<" NbDoF=" << NbDoF <<  " m = " << m << endl;
 				}
 			}
 
@@ -340,4 +345,6 @@ static void finit () {	// equivalent2d  3d EFQF
 	TheOperators->Add("<-", new OneOperator2<pEF3d *, pEF3d *, const GQuadratureFormular<R3> *>(EFQF3));
 }
 
-LOADFUNC(finit);
+LOADFUNC(finit);// une variable globale qui serat construite  au chargement dynamique
+
+// --- fin --

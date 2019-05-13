@@ -46,6 +46,33 @@
 #include <cmath>
 #include <complex>
 using namespace std;
+/*
+using namespace std;
+#include "error.hpp"
+#include "AFunction.hpp"
+using namespace std;
+#include "rgraph.hpp"
+#include "RNM.hpp"
+#include "fem.hpp"
+
+#include "FESpacen.hpp"
+#include "FESpace.hpp"
+
+#include "MatriceCreuse_tpl.hpp"
+#include "MeshPoint.hpp"
+#include "Operator.hpp"
+#include "lex.hpp"
+
+#include "lgfem.hpp"
+#include "lgmesh3.hpp"
+#include "lgsolver.hpp"
+#include "problem.hpp"
+// #include "LayerMesh.hpp"
+// #include "TransfoMesh_v2.hpp"
+#include "msh3.hpp"
+// #include "GQuadTree.hpp"
+// #include "lex.hpp"
+ */
 #include "ff++.hpp"
 #include <set>
 #include <vector>
@@ -885,6 +912,8 @@ void VTU_WRITE_MESH (FILE *fp, const Mesh3 &Th, bool binary, int datasize, bool 
 	//---------------------------------- LABELS WITH VTU -------------------------------------------//
 }
 
+
+
 // two dimensional case
 
 // LOAD fichier.vtk
@@ -927,9 +956,9 @@ Mesh*VTK_Load (const string &filename, bool bigEndian) {
 // swap = bigEndian or not bigEndian
 	// variable freefem++
 	int nv, nt = 0, nbe = 0;
-	int nerr = 0, ret;
+	int nerr = 0;
 	Mesh::Vertex *vff;
-	char *res;
+        char *res;
 
 	map<int, int> mapnumv;
 
@@ -943,13 +972,11 @@ Mesh*VTK_Load (const string &filename, bool bigEndian) {
 
 	char buffer[256], buffer2[256];
 
-	res = fgets(buffer, sizeof(buffer), fp);	// version line
-	if (res == NULL) cout << "fgets error" << endl;
-	res = fgets(buffer, sizeof(buffer), fp);	// title
-	if (res == NULL) cout << "fgets error" << endl;
+	res=fgets(buffer, sizeof(buffer), fp);	// version line
+	res=fgets(buffer, sizeof(buffer), fp);	// title
+    
 
-	ret = fscanf(fp, "%s", buffer);	// ASCII or BINARY
-	if (ret == EOF) cout << "fscanf error" << endl;
+	fscanf(fp, "%s", buffer);	// ASCII or BINARY
 	bool binary = false;
 	if (!strncmp(buffer, "BINARY", 6)) {binary = true;}
 
@@ -1693,6 +1720,7 @@ class VTK_WriteMesh_Op: public E_F0mps
 
 	public:
 		VTK_WriteMesh_Op (const basicAC_F0 &args): l(args.size() - 2) {
+			int nbofsol;
 			int ddim = 2;
 			int stsize = 3;
 			int sca = 0, vec = 0, ten = 0;
@@ -1708,7 +1736,7 @@ class VTK_WriteMesh_Op: public E_F0mps
 
 			if (BCastTo<pmesh>(args[1])) {eTh = CastTo<pmesh>(args[1]);}
 
-	//		nbofsol = l.size();
+			nbofsol = l.size();
 
 			for (size_t i = 2; i < args.size(); i++) {
 				size_t jj = i - 2;
@@ -2019,6 +2047,8 @@ void VTK_WRITE_MESH (const string &filename, FILE *fp, const Mesh &Th, bool bina
 
 	fprintf(fp, "CELL_DATA %d\n", numElements);
 	int cell_fd = 1;
+	int cell_lab = 1;
+
 	fprintf(fp, "Scalars  Label int %d\n", cell_fd);
 	fprintf(fp, "LOOKUP_TABLE FreeFempp_table\n");
 	// Determination des labels
@@ -2115,9 +2145,9 @@ AnyType VTK_WriteMesh_Op::operator () (Stack stack)  const {
 	string *dataname;
 	int nbofsol = l.size();
 	KN<int> order(nbofsol);
+
 	char *nameofuser[nbofsol];
 
-	memset(nameofuser[nbofsol], 0, sizeof(nameofuser));
 	for (int ii = 0; ii < nbofsol; ii++) {
 		order[ii] = 0;
 	}
@@ -2184,6 +2214,8 @@ AnyType VTK_WriteMesh_Op::operator () (Stack stack)  const {
 
 	if (iii < nbofsol) {
 		for (int iiii = iii; iiii < nbofsol; iiii++) {
+			// char *dataff = new char[l[iii].name.size()+1];
+			// strcpy(dataff, l[iii].name.c_str());
 			nameofuser[iiii] = newcopy(l[iiii].name.c_str());	// dataff;
 		}
 	}
@@ -2449,8 +2481,7 @@ Mesh3*VTK_Load3 (const string &filename, bool bigEndian) {
 // swap = bigEndian or not bigEndian
 	// variable freefem++
 	int nv, nt = 0, nbe = 0;
-	int nerr = 0, ret;
-	char * res;
+	int nerr = 0;
 	// Reading Mesh in vtk formats
 	FILE *fp = fopen(filename.c_str(), "rb");
 
@@ -2461,12 +2492,10 @@ Mesh3*VTK_Load3 (const string &filename, bool bigEndian) {
 
 	char buffer[256], buffer2[256];
 
-	res = fgets(buffer, sizeof(buffer), fp);	// version line
-	if (res == NULL) printf("fgets error\n");
-	res = fgets(buffer, sizeof(buffer), fp);	// title
-	if (res == NULL) printf("fgets error\n");
-	ret = fscanf(fp, "%s", buffer);	// ASCII or BINARY
-	if (ret == EOF) printf("fscanf error\n");
+	fgets(buffer, sizeof(buffer), fp);	// version line
+	fgets(buffer, sizeof(buffer), fp);	// title
+
+	fscanf(fp, "%s", buffer);	// ASCII or BINARY
 	bool binary = false;
 	if (!strcmp(buffer, "BINARY")) {binary = true;}
 
@@ -3626,6 +3655,7 @@ void VTK_WRITE_MESH3 (const string &filename, FILE *fp, const Mesh3 &Th, bool bi
 
 	fprintf(fp, "CELL_DATA %d\n", numElements);
 	int cell_fd = 1;
+	int cell_lab = 1;
 	fprintf(fp, "Scalars  Label int%d\n", cell_fd);
 	fprintf(fp, "LOOKUP_TABLE FreeFempp_table\n");
 	// Determination des labels
@@ -3723,9 +3753,9 @@ AnyType VTK_WriteMesh3_Op::operator () (Stack stack)  const {
 	string *dataname;
 	int nbofsol = l.size();
 	KN<int> order(nbofsol);
+
 	char *nameofuser[nbofsol];
 
-	for (int i=0; i< nbofsol;i++) nameofuser[i] = {};
 	for (int ii = 0; ii < nbofsol; ii++) {
 		order[ii] = 0;
 	}
@@ -4048,6 +4078,7 @@ void saveTecplot (const string &file, const Mesh &Th) {
 
 	pf.close();
 }
+
 
 static void Load_Init () {	// le constructeur qui ajoute la fonction "splitmesh3"  a freefem++
 	typedef Mesh *pmesh;
