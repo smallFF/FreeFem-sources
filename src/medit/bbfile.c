@@ -69,6 +69,7 @@ int bbfile (pMesh mesh) {
 	char *ptr, data[128], tmp[128];
 	ubyte bigbb;
 
+  memset(m, 0, 6 * sizeof(double));
 	/* default */
 	strcpy(tmp, mesh->name);
 	ptr = (char *)strstr(tmp, ".mesh");

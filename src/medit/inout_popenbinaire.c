@@ -753,6 +753,7 @@ int loadScaVecTen_bin (pMesh mesh, int numsol, int dim, int ver, int nel, int ty
 	double ScaSol[1], VecSol[3], TenSol[9];
 	int retcode = 0;
 
+	memset(fbuf, 0, sizeof(float) * GmfMaxTyp);
 	if (ddebug) printf("numsol=%i, type=%i, size=%i\n", numsol, type, size);
 
 	if (numsol > type) numsol = 1;

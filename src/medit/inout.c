@@ -41,6 +41,7 @@ int loadMesh (pMesh mesh) {
 	long i, ia, ib, inm, ref, is, k, disc, nn, nt, nq;
 	char *ptr, data[256];
 
+	memset(dn, 0, 3 * sizeof(double));
 	printf("use loadMesh\n");
 	/* default */
 	strcpy(data, mesh->name);
