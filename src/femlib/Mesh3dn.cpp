@@ -329,7 +329,7 @@ namespace Fem2D
         }
         ffassert( newvertex== iii );
 
-        Element *tt;
+        Element *tt={};
         if(this->nt !=0) tt=new Element[this->nt];
         BorderElement *bb = new BorderElement[this->nbe];
 
@@ -557,7 +557,7 @@ namespace Fem2D
       }
       ffassert( newvertex== iii );
 
-      Element *tt;
+      Element *tt={};
       if(this->nt !=0) tt=new Element[this->nt];
       BorderElement *bb = new BorderElement[this->nbe];
       Element *ttt=tt;
@@ -763,8 +763,8 @@ namespace Fem2D
       return 3;
     }
     int iv[4],lab;
-    float cr[3]={};
-
+    float cr[3];
+    memset(cr, 0, sizeof(float) * 3);
     // caution for the vertice 3 cases :
     // pure volume mesh -> in the .mesh, the vertice are true
     // pure surface mesh -> in the .mesh, the vertice are true

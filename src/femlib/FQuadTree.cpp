@@ -793,7 +793,6 @@ Vertex *  FQuadTree::ToClose(const R2 & v,R seuil,long hx,long hy)
   long ii[  MaxDeep ], jj [ MaxDeep];
   int l=0; // level
   QuadTreeBox * b;
-  long h=MaxISize;
   long hb =  MaxISize;
   long i0=0,j0=0;
 
@@ -805,7 +804,6 @@ Vertex *  FQuadTree::ToClose(const R2 & v,R seuil,long hx,long hy)
   pi[0]=  root->n>0 ?(int)  root->n : 4 ;
   ii[0]=i0;
   jj[0]=j0;
-  h=hb;
   do {
     b= pb[l];
     while (pi[l]--)

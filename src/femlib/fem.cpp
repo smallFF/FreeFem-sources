@@ -951,7 +951,7 @@ RESTART:
     int iib=-1;//,iit=-1;
 	R dP=DBL_MAX;
 	R2 PPhat;
-	const Triangle * tt;
+	const Triangle * tt={};
 	int k=0,kout=0;
 	kfind++;
 	while (1)
@@ -962,7 +962,8 @@ RESTART:
 	    {
 		ffassert(k++<10000);
 	    }
-	    int kk,n=0,nl[3]={};
+	    int kk,n=0,nl[3];
+			memset(nl, 0, sizeof(int) * 3);
 
 	    R2 & A(K[0]), & B(K[1]), & C(K[2]);
 	    R l[3]={0,0,0};

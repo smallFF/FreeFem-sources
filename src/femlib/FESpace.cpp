@@ -478,7 +478,6 @@ double TypeOfFE_P0VF::Pi_h_coef[]={1.,1.,1.}; //  bofbof a verifier ...
 
 void TypeOfFE_P0VF::FB(const bool *whatd,const Mesh & ,const Triangle & K,const RdHat & PHat,RNMK_ & val) const
 {
-//  const Triangle & K(FE.T);
   if (whatd[op_id])
    {
   R2 A(K[0]), B(K[1]),C(K[2]);
@@ -737,7 +736,6 @@ int nb_dfv,const int *ndfv,int nb_dfe,const int *ndfe)
           for (int kkk=0;kkk<NbNodeonEdge;kkk++)
            {
              int kj=kkk,kjj=-1;
-            // assert(kk != k);
              if ( kk >= 0 && jj >=0  &&  !(( kk == k ) && ( jj=j ) ) )
              {
               if (k < kk ) kjj = NbNodeonEdge-kj-1; //
@@ -1445,8 +1443,6 @@ class TypeOfMortarCas1: public TypeOfMortar {
 void TypeOfMortarCas1::ConstructionOfNode(const Mesh &Th,int im,int * NodesOfElement,int *FirstNodeOfElement,int &lastnodenumber) const
 {
   // im   mortar number
- // trop complique on change
-  //  const Mortar &M(Th.mortars[im]);
              int k = Th.nt+im;
              int  kk=FirstNodeOfElement[k]; //  begin
              // lagrange  multiplicator one new node

@@ -60,7 +60,7 @@ namespace Fem2D  {
 
 inline int  randwalk(int ncas)
 {
-        const long long a = 314125421, b =1, m=  777777;
+        const long long a = 314125421, m=  777777;
         static long xn = 19999999%m;
         if(ncas <=0) xn=19999999%m;
         long long xxn = xn;
@@ -741,7 +741,8 @@ template<typename T,typename B,typename V>
 void GenericMesh<T,B,V>::BuildjElementConteningVertex()
 {
   const int nkv= T::nv;
-    int lerr[10]={};
+    int lerr[10];
+    memset(lerr, 0, sizeof(int) * 10);
   if(!ElementConteningVertex) ElementConteningVertex = new int[nv];
 
     for(int i=0;i<nv;++i)
@@ -1191,7 +1192,9 @@ DataFENodeDF GenericMesh<T,B,V>::BuildDFNumbering(int ndfon[NbTypeItemElement],i
 	  for(int ieq=0,keq=0;keq<nbequibe;++keq)
 	    {
 		int p1[nbev],p2[nbev];
-		int v1[nbev]={},v2[nbev]={};
+		int v1[nbev],v2[nbev];
+    memset(v1, 0, sizeof(int) * nbev);
+    memset(v2, 0, sizeof(int) * nbev);
 		int be1=equibe[ieq]/8,pe1=equibe[ieq++]%8;
 		int be2=equibe[ieq]/8,pe2=equibe[ieq++]%8;
 		int itemb1,k1=BoundaryElement(be1,itemb1);

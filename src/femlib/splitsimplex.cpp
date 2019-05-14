@@ -1,5 +1,5 @@
-// used by splitsimplex.cpp 
-// ----   build a the simplex decomposition 
+// used by splitsimplex.cpp
+// ----   build a the simplex decomposition
 /*
 template void  SplitSimplex<R1>(int N,int & nv, R1 *& P, int & nk , int *& K);
 template void  SplitSimplex<R2>(int N,int & nv, R2 *& P, int & nk , int *& K);
@@ -7,31 +7,31 @@ template void  SplitSimplex<R3>(int N,int & nv, R3 *& P, int & nk , int *& K);
 $:
 */
 //
-//   
+//
 // ORIG-DATE:     fev 2009
 // -*- Mode : c++ -*-
 //
-// SUMMARY  :  Model  mesh 2d   
-// USAGE    : LGPL      
-// ORG      : LJLL Universite Pierre et Marie Curie, Paris,  FRANCE 
+// SUMMARY  :  Model  mesh 2d
+// USAGE    : LGPL
+// ORG      : LJLL Universite Pierre et Marie Curie, Paris,  FRANCE
 // AUTHOR   : Frederic Hecht
 // E-MAIL   : frederic.hecht@ann.jussieu.fr
 //
 
 /*
- 
+
  This file is part of Freefem++
- 
+
  Freefem++ is free software; you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
  the Free Software Foundation; either version 2.1 of the License, or
  (at your option) any later version.
- 
+
  Freefem++  is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU Lesser General Public License for more details.
- 
+
  You should have received a copy of the GNU Lesser General Public License
  along with Freefem++; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -57,11 +57,11 @@ extern  long verbosity ;
 #include "splitsimplex.hpp"
 
 /*
-  construction an array of sub simplex for plot ... 
-  see last template function 
+  construction an array of sub simplex for plot ...
+  see last template function
      SplitSimplex(N,nv,P,nk,K);
   N > 1 -> classical split un N^d sub simplex
-  nv : number of point on    
+  nv : number of point on
 */
 //  d = 1   trivial
 void SplitSimplex(int N,R1 *P,int *K,int op=0,R1 *AB=0)
@@ -112,20 +112,18 @@ inline int NumSimplex2(int i,int j) { return j+NumSimplex2(i+j);}
 inline int NumSimplex3(int i,int j,int k) { return NumSimplex3(i+j+k)+NumSimplex2(j+k)+k;}
 
 
-inline void  invNumSimplex2(int n,int &i,int &j) 
+inline void  invNumSimplex2(int n,int &i,int &j)
 {
-  int k= invNumSimplex2(n); //( i+j) 
+  int k= invNumSimplex2(n); //( i+j)
   j=n-NumSimplex2(k);
   i= k-j;
-  //  cout << n << " " << k << " -> " << i << " " << j << endl;
   assert( n == NumSimplex2(i,j));
 }
-inline void  invNumSimplex3(int n,int &i,int &j,int &k) 
+inline void  invNumSimplex3(int n,int &i,int &j,int &k)
 {
-  int l= invNumSimplex3(n); //=( i+j+k) 
+  int l= invNumSimplex3(n); //=( i+j+k)
   invNumSimplex2(n-NumSimplex3(l),j,k);
-  i=l-k-j; 
-  // cout << n << "   " << l << "-> " << i << " " << j << " " << k <<endl;
+  i=l-k-j;
   assert( n == NumSimplex3(i,j,k)) ;
 }
 
@@ -136,15 +134,15 @@ void SplitSimplex(int N,R2 *P,int *K,int op=0,R2 *ABC=0)
   assert(N>0);
   int nv = (N+1)*(N+2)/2;
   double h=1./N;
-  //   loop sur les diag   i+j = k 
-  //   num  ( i+j,j) lexico croissant  
+  //   loop sur les diag   i+j = k
+  //   num  ( i+j,j) lexico croissant
   for(int l=0;l<nv;l++)
     {
       int i,j;
       invNumSimplex2(l,i,j);
       if(ABC)
 	P[l+op]= R2(i*h,j*h).Bary(ABC);
-      else 
+      else
 	P[l+op]= R2(i*h,j*h);
       assert(l<nv);
     }
@@ -153,7 +151,7 @@ void SplitSimplex(int N,R2 *P,int *K,int op=0,R2 *ABC=0)
   int l=0;
   for (int i=0;i<N;++i)
     for (int j=0;j<N;++j)
-      if(i+j<N) 
+      if(i+j<N)
 	{
 	  K[l++]= op+NumSimplex2(i,j);
 	  K[l++]= op+NumSimplex2(i+1,j);
@@ -167,45 +165,6 @@ void SplitSimplex(int N,R2 *P,int *K,int op=0,R2 *ABC=0)
 	}
 }
 
-/*
-// d = 3 Surfacic
-void SplitSimplex(int N,R3 *P,int *K,int op=0,R3 *ABC=0)
-{
-    assert(N>0);
-    int nv = (N+1)*(N+2)/2;
-    double h=1./N;
-    //   loop sur les diag   i+j = k
-    //   num  ( i+j,j) lexico croissant
-    for(int l=0;l<nv;l++)
-    {
-        int i,j,k;
-        invNumSimplex3(l,i,j,k);
-        if(ABC)
-            P[l+op]= R3(i*h,j*h,k*h).Bary(ABC);
-        else
-            P[l+op]= R3(i*h,j*h,k*h);
-        assert(l<nv);
-    }
-    //    generation des trianges
-    // --------
-    int l=0;
-    for (int i=0;i<N;++i)
-        for (int j=0;j<N;++j)
-            if(i+j<N)
-            {
-                K[l++]= op+NumSimplex2(i,j);
-                K[l++]= op+NumSimplex2(i+1,j);
-                K[l++]= op+NumSimplex2(i,j+1);
-            }
-            else
-            {
-                K[l++]= op+NumSimplex2(N-i,N-j);
-                K[l++]= op+NumSimplex2(N-i,N-j-1);
-                K[l++]= op+NumSimplex2(N-i-1,N-j);
-            }
-} */
-
-
 void SplitSimplex(int N,R3 *P,int *tet,int op=0,R3* Khat=0)
 {
     const int n=N;
@@ -213,7 +172,7 @@ void SplitSimplex(int N,R3 *P,int *tet,int op=0,R3* Khat=0)
   const int n3=n2*n;
   const int ntc=6;
   int nv = (N+1)*(N+2)*(N+3)/6;
-  
+
   int d1[6][4] = { {0,1,2,4} , {1,2,4,3},{1,3,4,5},{3,4,5,6},{ 2,3,6,4}, {3,5,7,6} };
   int ntt=0;
   int n8[8];
@@ -225,12 +184,12 @@ void SplitSimplex(int N,R3 *P,int *tet,int op=0,R3* Khat=0)
       invNumSimplex3(l,i,j,k);
       if(Khat)
 	P[l+op]= R3(i*h,j*h,k*h).Bary(Khat);
-      else 
+      else
 	P[l+op]= R3(i*h,j*h,k*h);
       assert(l<nv);
     }
   // comment n3  i=m[n]
-  //  m = i+j*n+k*n2 
+  //  m = i+j*n+k*n2
   for (int m=0;m<n3;m++)
     {
       int i = m % n;
@@ -254,18 +213,9 @@ void SplitSimplex(int N,R3 *P,int *tet,int op=0,R3* Khat=0)
 	    if(out == 0 )  ntt++;
 	    else ptet -= 4; // remove tet
 	  }
-      
+
     }
- /* if(verbosity>199)
-    {
-      
-      cout <<   "  SplitSimplex   " << endl;
-      for (int i=0,l=0;i<n3;i++)
-       for(int m=0;m<4;++m)
-         cout << tet[l++] << (m==3 ? '\n' : ' ' );
-       cout << ptet << "   " << tet << endl;
-    }*/
-  assert(ntt==n3);
+   assert(ntt==n3);
 }
 
 // Add J. Morice (trunc functions)
@@ -273,15 +223,14 @@ void SplitSimplex(int N,R3 *P,int *tet,int op=0,R3* Khat=0)
 void SplitSurfaceSimplex(int N,int &ntri2,int *&tri)
 {
   const int n=N;
-  const int n2=n*n;
-  
+
   int ntri=3*ntri2;
   int op=0;
-  
+
   tri = new int[ntri];
   //    generation des trianges
   // --------
-  
+
   // face i=0
   int l=0;
   if(verbosity>200)
@@ -292,24 +241,22 @@ void SplitSurfaceSimplex(int N,int &ntri2,int *&tri)
 	{
 	  tri[l++]= op+NumSimplex3(0,i,j);
 	  tri[l++]= op+NumSimplex3(0,i+1,j);
-	  tri[l++]= op+NumSimplex3(0,i,j+1); 
+	  tri[l++]= op+NumSimplex3(0,i,j+1);
 	}
       else
 	{
 	  tri[l++]= op+NumSimplex3(0,N-i,N-j);
 	  tri[l++]= op+NumSimplex3(0,N-i,N-j-1);
-	  tri[l++]= op+NumSimplex3(0,N-i-1,N-j); 
+	  tri[l++]= op+NumSimplex3(0,N-i-1,N-j);
 	}
-      //cout << "i,j " << i << "," << j << endl;
       if(verbosity>200)
       cout << "l="<< l/3 <<  " "<< tri[l-3] <<" "<< tri[l-2] <<" "<<  tri[l-1] <<" "<<  endl;
     }
-  // face j=0
   if(verbosity>200)
   cout << "face j=0" << endl;
   for (int i=0;i<N;++i)
     for (int j=0;j<N;++j){
-      if(i+j<N) 
+      if(i+j<N)
 	{
 	  tri[l++]= op+NumSimplex3(i,0,j);
 	  tri[l++]= op+NumSimplex3(i,0,j+1); // inverser les deux lignes
@@ -321,51 +268,45 @@ void SplitSurfaceSimplex(int N,int &ntri2,int *&tri)
 	  tri[l++]= op+NumSimplex3(N-i-1,0,N-j); // inverser les deux lignes
 	  tri[l++]= op+NumSimplex3(N-i,0,N-j-1);
 	}
-      //cout << "i,j " << i << "," << j << endl;
       if(verbosity>200)
 	cout << "l="<< l/3 <<  " "<< tri[l-3] <<" "<< tri[l-2] <<" "<<  tri[l-1] <<" "<<  endl;
     }
-  // face k=0
   if(verbosity>200)
     cout << "face k=0" << endl;
   for (int i=0;i<N;++i)
     for (int j=0;j<N;++j){
-      if(i+j<N) 
+      if(i+j<N)
 	{
 	  tri[l++]= op+NumSimplex3(i,j,0);
 	  tri[l++]= op+NumSimplex3(i+1,j,0);
 	  tri[l++]= op+NumSimplex3(i,j+1,0);
-	  //tri[l++]= op+NumSimplex3(i+1,j,0);
 	}
       else
 	{
 	  tri[l++]= op+NumSimplex3(N-i,N-j,0);
 	  tri[l++]= op+NumSimplex3(N-i,N-j-1,0);
-	  tri[l++]= op+NumSimplex3(N-i-1,N-j,0); 
-	  //tri[l++]= op+NumSimplex3(N-i,N-j-1,0);
+	  tri[l++]= op+NumSimplex3(N-i-1,N-j,0);
 	}
-      //cout << "i,j " << i << "," << j << endl;
       if(verbosity>200)
 	cout << "l="<< l/3 <<  " "<< tri[l-3] <<" "<< tri[l-2] <<" "<<  tri[l-1] <<" "<<  endl;
     }
-  // face i+j+k=1
   if(verbosity>200)
     cout << "dernier face " << endl;
   for (int k=0;k<N;++k)
     for (int j=0;j<N;++j){
-      if(k+j<N) 
+      if(k+j<N)
 	{
 	  int i=N-j-k;
 	  tri[l++]= op+NumSimplex3(   i,   j,   k);
-	  tri[l++]= op+NumSimplex3( i-1,   j, k+1); 
+	  tri[l++]= op+NumSimplex3( i-1,   j, k+1);
 	  tri[l++]= op+NumSimplex3( i-1, j+1,   k);
 	}
       else
 	{
 	  int i=N-(N-j-1)-(N-k);
 	  tri[l++]= op+NumSimplex3(   i, N-j-1, N-k);
-	  tri[l++]= op+NumSimplex3( i-1, N-j,   N-k); 
-	  tri[l++]= op+NumSimplex3(   i, N-j, N-k-1); 
+	  tri[l++]= op+NumSimplex3( i-1, N-j,   N-k);
+	  tri[l++]= op+NumSimplex3(   i, N-j, N-k-1);
 	}
       if(verbosity>200)
 	cout << "l="<< l/3 <<  " "<< tri[l-3] <<" "<< tri[l-2] <<" "<<  tri[l-1] <<" "<<  endl;
@@ -381,11 +322,10 @@ void SplitSurfaceSimplex(int N,int &ntri2,int *&tri)
 void SplitEdgeSimplex(int N,int &nedge2,int *&edge)
 {
   const int n=N;
-  const int n2=n*n;
-    
+
   int nedge=2*nedge2;
   int op=0;
-    
+
   edge = new int[nedge];
   //    generation des edges
   // --------
@@ -402,7 +342,7 @@ void SplitEdgeSimplex(int N,int &nedge2,int *&edge)
       if(verbosity>200)
         cout << "l="<< l/2 <<" "<< edge[l-2] <<" "<<  edge[l-1] <<" "<<  endl;
     }
- 
+
     for (int i=0;i<N;++i)
      for (int j=0;j<N;++j) {
        if(i+j<N) {
@@ -412,7 +352,7 @@ void SplitEdgeSimplex(int N,int &nedge2,int *&edge)
        if(verbosity>200)
          cout << "l="<< l/2 <<" "<< edge[l-2] <<" "<<  edge[l-1] <<" "<<  endl;
      }
-    
+
     for (int i=0;i<N;++i)
       for (int j=0;j<N;++j) {
         if(i+j<N) {
@@ -427,68 +367,6 @@ void SplitEdgeSimplex(int N,int &nedge2,int *&edge)
       cout << "l= " << l << " nedge=" << nedge << endl;
     assert( l == nedge);
 }
-
-
-
-/*
-void  SplitSimplex(int N,int & nv, R1 *& P, int & nk , int *& K)
-{
-  typedef R1 Rd;
-  const int d = Rd::d;
-  int cas = (N>0) ? 1 : d+1;
-  N=abs(N);
-  assert(N);
-  int nv1=(N+1);
-  int nk1= N;
-  nv = cas*nv1;
-  nk = cas*nk1;
-  
-  P = new Rd[nv];
-  K = new int [nk*(d+1)];
-  if( cas ==1) 
-    SplitSimplex( N, P,K) ;
-    else 
-      {
-	Rd AB1[2]= { Rd(0),Rd(0.5)};
-	SplitSimplex( N, P,K,0,AB1)      ;
-	Rd AB2[2]= { Rd(0.5),Rd(1)};
-	SplitSimplex( N, P,K+nk1,nv1,AB2);      
-      }
-}
-
-
-void  SplitSimplex(int N,int & nv, R2 *& P, int & nk , int *& K)
-{
-  typedef R2 Rd;
-  const int d = Rd::d;
-  int cas = (N>0) ? 1 : d+1;
-  assert(N);
-  N=abs(N);
-  int nv1=N*(N+1)/2;
-  int nk1= N*N;
-  nv = cas*nv1;
-  nk = cas*nk1;
-  P = new Rd[nv];
-  K = new int [nk*(d+1)];
-  if( cas ==1) 
-    SplitSimplex( N, P,K);
-  else 
-    { 
-      Rd G=Rd::diag(1./(d+1));
-      R2 Khat[d+1];
-      for (int i=0;i<d;++i)
-	Khat[i+1][i]=1; //  modit  25/2/2009
-      for(int i=0;i<=d;++i)
-	{
-	  Rd S=Khat[i];
-	  Khat[i]=G;
-	  SplitSimplex( N, P,K+nk1*i,nv1*i,Khat);
-	  Khat[i]=S;
-	}     
-    }
-}
-
-*/
 
 template<class Rd>
 void  SplitSimplex(int N,int & nv, Rd *& P, int & nk , int *& K)
@@ -508,26 +386,26 @@ void  SplitSimplex(int N,int & nv, Rd *& P, int & nk , int *& K)
   nk = cas*nk1;
   P = new Rd[nv]; // no bug correct jan 2024 FH (thank to OP)
   K = new int[nk*d1]; // no  bug correct jan 2024 FH (thank to OP)
-  if( cas ==1) 
+  if( cas ==1)
     SplitSimplex( N, P,K);
-  else 
-    { 
+  else
+    {
       Rd G=Rd::diag(1./(d1));
       for(int i=0;i<=d;++i)
 	{
 	  Rd Khat[d+1];
 	  for (int j=1;j<=d;++j)
-	    Khat[j][j-1]=1;// bug correct jan 2024 FH (thank to OP) 
+	    Khat[j][j-1]=1;// bug correct jan 2024 FH (thank to OP)
 	  Khat[i]=G;
 	  SplitSimplex( N, P,K+(nk1*d1)*i,nv1*i,Khat); // FH  no recursion here ...
-	}     
+	}
     }
   if(verbosity>99)
      {
          cout << "SplitSimplex : nv ="  << nv << " nk :" << nk << " " << N <<  endl ;
          for(int i=0; i< nv ; ++i)
              cout << i << " / " << P[i] <<  endl;
-         
+
          for(int k=0,kk=0; k < nk; ++k)
          {
             cout << k << " " << kk << " : ";
@@ -535,31 +413,10 @@ void  SplitSimplex(int N,int & nv, Rd *& P, int & nk , int *& K)
                  cout << K[kk++] << " " ;
              cout << endl;
          }
-         
+
      }
 }
 
 template void  SplitSimplex<R1>(int N,int & nv, R1 *& P, int & nk , int *& K);
 template void  SplitSimplex<R2>(int N,int & nv, R2 *& P, int & nk , int *& K);
 template void  SplitSimplex<R3>(int N,int & nv, R3 *& P, int & nk , int *& K);
-/*
-int main(int argc,const char ** argv)
-{
-  R3 *P;
-  int *K,nv,nk;
-  int N=2;
-  if(argc>1) N=atoi(argv[1]);
-  SplitSimplex(N,nv,P,nk,K);
-  cout << P << " " << K << endl;
-  cout << N << " nv " << nv << " nk =" << nk << endl;
-  for(int i=0;i<nv;++i) cout << P[i] << endl;
-  for(int i=0,l=0;i<nk;i++) 
-    {
-      for(int j=0;j<4;j++) 
-	cout << K[l++] << " ";
-      cout << endl;
-    }
-
-  
-}
-*/

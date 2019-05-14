@@ -1,34 +1,34 @@
 // -*- Mode : c++ -*-
 //
-// SUMMARY  :      
-// USAGE    :        
-// ORG      : 
+// SUMMARY  :
+// USAGE    :
+// ORG      :
 // AUTHOR   : Frederic Hecht
 // E-MAIL   : hecht@ann.jussieu.fr
 //
 
 /*
- 
+
  This file is part of Freefem++
- 
+
  Freefem++ is free software; you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
  the Free Software Foundation; either version 2.1 of the License, or
  (at your option) any later version.
- 
+
  Freefem++  is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU Lesser General Public License for more details.
- 
+
  You should have received a copy of the GNU Lesser General Public License
  along with Freefem++; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
  Thank to the ARN   FF2A3 grant
- ref:ANR-07-CIS7-002-01 
- 
-For 2d hight order formula: 
+ ref:ANR-07-CIS7-002-01
+
+For 2d hight order formula:
  Thanks to http://xyz.lanl.gov/format/math.NA/0501496
   Mathematics, abstract
   math.NA/0501496
@@ -69,8 +69,8 @@ using namespace std;
 #include "QuadratureFormular.hpp"
 
 namespace Fem2D {
-  
-template<class QF,int ON> 
+
+template<class QF,int ON>
   QF  * QF_exact(int exact,QF * p=0)
   {
     exact=max(0,exact);
@@ -78,7 +78,7 @@ template<class QF,int ON>
     assert(exact<N&& exact>=0);
     static QF ** a=0;
     if(a==0)
-      { //    
+      { //
 	a = new  QF*[N];
 	assert(a);
 	for(int i=0;i<N;++i)
@@ -108,7 +108,7 @@ GQuadratureFormular<Rd> * QF_Simplex(int exact)
    return  QF_exact<GQuadratureFormular<Rd>,Rd::d+1>(exact);
  }
 
-// explict instantiation 
+// explict instantiation
 template  GQuadratureFormular<R1> * QF_Simplex<R1>(int exact);
 template  GQuadratureFormular<R2> * QF_Simplex<R2>(int exact);
 template  GQuadratureFormular<R3> * QF_Simplex<R3>(int exact);
@@ -116,15 +116,15 @@ template  GQuadratureFormular<R3> * QF_Simplex<R3>(int exact);
 
 
 
-template<class Rd>    
-ostream& operator <<(ostream& f,const  GQuadraturePoint<Rd> & p) 
-      { f << '{' << (const R) p << '\t' << (const Rd &) p << '}' ; 
+template<class Rd>
+ostream& operator <<(ostream& f,const  GQuadraturePoint<Rd> & p)
+      { f << '{' << (const R) p << '\t' << (const Rd &) p << '}' ;
         return f;}
 
-template<class Rd>    
-ostream& operator <<(ostream& f, const GQuadratureFormular<Rd>  & fi) 
+template<class Rd>
+ostream& operator <<(ostream& f, const GQuadratureFormular<Rd>  & fi)
       { f << "nb de point integration " << fi.n << ", adr = " << &f << endl;
-        for (int i=0;i<fi.n;i++) f << '\t' << fi[i] << endl; 
+        for (int i=0;i<fi.n;i++) f << '\t' << fi[i] << endl;
         return f;}
 
 // ----------------------------------------------------------------------
@@ -159,18 +159,18 @@ static  GQuadraturePoint<R2> P_QuadratureFormular_T_2_4P1[9] = {
       GQuadraturePoint<R2>(1./12.,R2(0.75,0.0)) ,
       GQuadraturePoint<R2>(1./6.,R2(0.25,0.25)) ,
       GQuadraturePoint<R2>(1./6.,R2(0.25,0.50)) ,
-      GQuadraturePoint<R2>(1./6.,R2(0.50,0.25))       
+      GQuadraturePoint<R2>(1./6.,R2(0.50,0.25))
       };
 
 GQuadratureFormular<R2> const QuadratureFormular_T_2_4P1(2,9,P_QuadratureFormular_T_2_4P1);
 // ----------------------------------------------------------------------
-// STROUD page  314 
+// STROUD page  314
 // -----------------------------
 const R sqrt15 = 3.87298334620741688517926539978;
 const R t_T5 =1.E0/3.E0        ,                           A_T5 = 0.225E0;
 const R r_T5 = (6-sqrt15)/21   ,  s_T5 = (9+2*sqrt15)/21 , B_T5 = (155-sqrt15)/1200;
 const R u_T5 = (6+sqrt15)/21   ,  v_T5 = (9-2*sqrt15)/21 , C_T5 = (155+sqrt15)/1200;
-// OK cette  formule  est OK 
+// OK cette  formule  est OK
 static  GQuadraturePoint<R2> P_QuadratureFormular_T_5[] = {
   GQuadraturePoint<R2>(A_T5,R2(t_T5,t_T5)),
   GQuadraturePoint<R2>(B_T5,R2(r_T5,r_T5)),
@@ -184,7 +184,7 @@ const GQuadratureFormular<R2> QuadratureFormular_T_5(5,7,P_QuadratureFormular_T_
 // ------------------
 //----
 
- 
+
 // Thanks to http://xyz.lanl.gov/format/math.NA/0501496
 /*
 Mathematics, abstract
@@ -199,8 +199,8 @@ Report-no: SAND2005-0034J
 
 */
 // ----------------------------------------------------------------------
-// awk '/15:/,/21:/ {print "GQuadraturePoint<R2>(" $3 "/2," $1"," $2"),"}' coords.txt   
-static  GQuadraturePoint<R2> P_QuadratureFormular_T_7[] = {  
+// awk '/15:/,/21:/ {print "GQuadraturePoint<R2>(" $3 "/2," $1"," $2"),"}' coords.txt
+static  GQuadraturePoint<R2> P_QuadratureFormular_T_7[] = {
 GQuadraturePoint<R2>(0.0102558174092/2,R2(1.0000000000000,0.0000000000000)),
 GQuadraturePoint<R2>(0.0102558174092/2,R2(0.0000000000000,0.0000000000000)),
 GQuadraturePoint<R2>(0.0102558174092/2,R2(0.0000000000000,1.0000000000000)),
@@ -220,7 +220,7 @@ GQuadraturePoint<R2>(0.2652238803946/2,R2(0.2385615300181,0.2385615300181))
 const GQuadratureFormular<R2> QuadratureFormular_T_7(7,15,P_QuadratureFormular_T_7);
 
 // awk '/21:/,/28:/ {print "GQuadraturePoint<R2>(" $3 "/2," $1"," $2"),"}' coords.txt
-static GQuadraturePoint<R2> P_QuadratureFormular_T_9[] = {  
+static GQuadraturePoint<R2> P_QuadratureFormular_T_9[] = {
 GQuadraturePoint<R2>(0.0519871420646/2,R2(0.0451890097844,0.0451890097844)),
 GQuadraturePoint<R2>(0.0519871420646/2,R2(0.0451890097844,0.9096219804312)),
 GQuadraturePoint<R2>(0.0519871420646/2,R2(0.9096219804312,0.0451890097844)),
@@ -260,9 +260,9 @@ QP1 *  GaussLegendre(int nn)
     double r, r1, p1, p2, p3, dp3;
     double eps=1e-16;
       const double pi=3.141592653589793238463;//M_PI;
-    
+
     for(int i = 0,ii=n; i <= (n+1)/2-1; i++)
-      { 
+      {
 	ii-=1;
 	r = cos(pi*(4*i+3)/(4*n+2));
         do
@@ -275,7 +275,7 @@ QP1 *  GaussLegendre(int nn)
                 p2 = p3;
                 p3 = ((2*j+1)*r*p2-j*p1)/(j+1);
 	      }
-	    
+
             dp3 = n*(r*p3-p2)/(r*r-1);
             r1 = r;
             r = r-p3/dp3;
@@ -284,9 +284,9 @@ QP1 *  GaussLegendre(int nn)
         p[i].x = 0.5 +r/2;
         p[ii].x =0.5  -r/2;
         p[i].a=p[ii].a= 1./((1.-r*r)*dp3*dp3);
-	
+
       }
-    
+
     //    Check();
     return p;
   }
@@ -303,11 +303,11 @@ void QuadratureFormular1d::Check()
 	if (abs( ve-v)/ve > 1.e-8)
 	{
 	    cout << " erreur QuadratureFormular1d  n= " << n  << " exact = " << exact << endl;
-	    cout << " int x^" <<m << " == " << ve << " ! = " << v  << endl; 
+	    cout << " int x^" <<m << " == " << ve << " ! = " << v  << endl;
 	    err++;
 	}
     }
-    assert(err==0);	
+    assert(err==0);
 }
 */
 static const R gauss_n2_1=  (1-sqrt(1./3.))/2;
@@ -335,17 +335,17 @@ const R gauss1_n5_b=  sqrt(245.+14.*sqrt(70.))/21.;
 const QuadratureFormular1d QF_GaussLegendre3(5,
                   QuadratureFormular1d::QP(pgauss_n3_0,gauss_n3_0),
                   QuadratureFormular1d::QP(pgauss_n3_1,gauss_n3_1),
-                  QuadratureFormular1d::QP(pgauss_n3_2,gauss_n3_2)); 
-                    
+                  QuadratureFormular1d::QP(pgauss_n3_2,gauss_n3_2));
+
 const QuadratureFormular1d QF_GaussLegendre2(3,
                   QuadratureFormular1d::QP(0.5,gauss_n2_1),
-                  QuadratureFormular1d::QP(0.5,gauss_n2_2)); 
+                  QuadratureFormular1d::QP(0.5,gauss_n2_2));
 
-const QuadratureFormular1d QF_GaussLegendre1(1,QuadratureFormular1d::QP(1,0.5)); 
+const QuadratureFormular1d QF_GaussLegendre1(1,QuadratureFormular1d::QP(1,0.5));
 
 const QuadratureFormular1d QF_LumpP1_1D(1,
                   QuadratureFormular1d::QP(0.5,0.),
-                  QuadratureFormular1d::QP(0.5,1.)); 
+                  QuadratureFormular1d::QP(0.5,1.));
 
 
 const QuadratureFormular1d QF_GaussLegendre4(7,
@@ -353,7 +353,7 @@ const QuadratureFormular1d QF_GaussLegendre4(7,
 					     QuadratureFormular1d::QP(pgauss1_n4_a/2.,(1.-gauss1_n4_a)/2.),
 					     QuadratureFormular1d::QP(pgauss1_n4_b/2.,(1.+gauss1_n4_b)/2.),
 					     QuadratureFormular1d::QP(pgauss1_n4_b/2.,(1.-gauss1_n4_b)/2.)
-					     ); 
+					     );
 
 const QuadratureFormular1d QF_GaussLegendre5(-1+2*5,5,GaussLegendre(5),true);
 const QuadratureFormular1d QF_GaussLegendre6(-1+2*6,6,GaussLegendre(6),true);
@@ -365,258 +365,258 @@ const QuadratureFormular1d QF_GaussLegendre10(-1+2*10,10,GaussLegendre(10),true)
 
 
 /*
-Region: Simplex 
-Dimension: 3 
-Degree: 3 
-Points: 5 
-Structure: Fully symmetric 
-Rule struct: 0 0 0 0 0 0 1 1 0 0 0 
-Generator: [ Fully symmetric ] 
-( 0.25, 0.25, 0.25, ) 
-Corresponding weight: 
+Region: Simplex
+Dimension: 3
+Degree: 3
+Points: 5
+Structure: Fully symmetric
+Rule struct: 0 0 0 0 0 0 1 1 0 0 0
+Generator: [ Fully symmetric ]
+( 0.25, 0.25, 0.25, )
+Corresponding weight:
 -0.133333333333333333333333333333333,
-Generator: [ Fully symmetric ] 
-( 0.166666666666666666666666666666666, 
-0.166666666666666666666666666666666, 
-0.166666666666666666666666666666666, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.166666666666666666666666666666666,
+0.166666666666666666666666666666666,
+0.166666666666666666666666666666666,
+)
+Corresponding weight:
 0.075,
 
-Region: Simplex 
-Dimension: 3 
-Degree: 4 
-Points: 11 
-Structure: Fully symmetric 
-Rule struct: 0 0 0 0 0 0 1 1 1 0 0 
-Generator: [ Fully symmetric ] 
-( 0.25, 0.25, 0.25, ) 
-Corresponding weight: 
+Region: Simplex
+Dimension: 3
+Degree: 4
+Points: 11
+Structure: Fully symmetric
+Rule struct: 0 0 0 0 0 0 1 1 1 0 0
+Generator: [ Fully symmetric ]
+( 0.25, 0.25, 0.25, )
+Corresponding weight:
 -0.0131555555555555555555555555555555,
-Generator: [ Fully symmetric ] 
-( 0.0714285714285714285714285714285714, 
-0.0714285714285714285714285714285714, 
-0.0714285714285714285714285714285714, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.0714285714285714285714285714285714,
+0.0714285714285714285714285714285714,
+0.0714285714285714285714285714285714,
+)
+Corresponding weight:
 10 ^ -3 x 7.62222222222222222222222222222222,
 
-Generator: [ Fully symmetric ] 
-( 0.399403576166799204996102147461640, 
-0.399403576166799204996102147461640, 
-0.100596423833200795003897852538359, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.399403576166799204996102147461640,
+0.399403576166799204996102147461640,
+0.100596423833200795003897852538359,
+)
+Corresponding weight:
 0.0248888888888888888888888888888888,
 
 
-Region: Simplex 
-Dimension: 3 
-Degree: 6 
-Points: 24 
-Structure: Fully symmetric 
-Rule struct: 0 0 0 0 0 0 0 3 0 1 0 
-Generator: [ Fully symmetric ] 
-( 0.214602871259152029288839219386284, 
-0.214602871259152029288839219386284, 
-0.214602871259152029288839219386284, 
-) 
-Corresponding weight: 
+Region: Simplex
+Dimension: 3
+Degree: 6
+Points: 24
+Structure: Fully symmetric
+Rule struct: 0 0 0 0 0 0 0 3 0 1 0
+Generator: [ Fully symmetric ]
+( 0.214602871259152029288839219386284,
+0.214602871259152029288839219386284,
+0.214602871259152029288839219386284,
+)
+Corresponding weight:
 10 ^ -3 x 6.65379170969458201661510459291332,
-Generator: [ Fully symmetric ] 
-( 0.0406739585346113531155794489564100, 
-0.0406739585346113531155794489564100, 
-0.0406739585346113531155794489564100, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.0406739585346113531155794489564100,
+0.0406739585346113531155794489564100,
+0.0406739585346113531155794489564100,
+)
+Corresponding weight:
 10 ^ -3 x 1.67953517588677382466887290765614,
 
-Generator: [ Fully symmetric ] 
-( 0.322337890142275510343994470762492, 
-0.322337890142275510343994470762492, 
-0.322337890142275510343994470762492, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.322337890142275510343994470762492,
+0.322337890142275510343994470762492,
+0.322337890142275510343994470762492,
+)
+Corresponding weight:
 10 ^ -3 x 9.22619692394245368252554630895433,
 
-Generator: [ Fully symmetric ] 
-( 0.0636610018750175252992355276057269, 
-0.0636610018750175252992355276057269, 
-0.269672331458315808034097805727606, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.0636610018750175252992355276057269,
+0.0636610018750175252992355276057269,
+0.269672331458315808034097805727606,
+)
+Corresponding weight:
 10 ^ -3 x 8.03571428571428571428571428571428,
 
 
 
-Region: Simplex 
-Dimension: 3 
-Degree: 7 
-Points: 31 
-Structure: Fully symmetric 
-Rule struct: 0 1 0 0 0 0 1 3 0 1 0 
-Generator: [ Fully symmetric ] 
-( 0.5, 0.5, 0., ) 
-Corresponding weight: 
+Region: Simplex
+Dimension: 3
+Degree: 7
+Points: 31
+Structure: Fully symmetric
+Rule struct: 0 1 0 0 0 0 1 3 0 1 0
+Generator: [ Fully symmetric ]
+( 0.5, 0.5, 0., )
+Corresponding weight:
 10 ^ -4 x 9.70017636684303350970017636684303,
-Generator: [ Fully symmetric ] 
-( 0.25, 0.25, 0.25, ) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.25, 0.25, 0.25, )
+Corresponding weight:
 0.0182642234661088202912015685649462,
 
-Generator: [ Fully symmetric ] 
-( 0.0782131923303180643739942508375545, 
-0.0782131923303180643739942508375545, 
-0.0782131923303180643739942508375545, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.0782131923303180643739942508375545,
+0.0782131923303180643739942508375545,
+0.0782131923303180643739942508375545,
+)
+Corresponding weight:
 0.0105999415244136869164138748545257,
 
-Generator: [ Fully symmetric ] 
-( 0.121843216663905174652156372684818, 
-0.121843216663905174652156372684818, 
-0.121843216663905174652156372684818, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.121843216663905174652156372684818,
+0.121843216663905174652156372684818,
+0.121843216663905174652156372684818,
+)
+Corresponding weight:
 -0.0625177401143318516914703474927900,
 
-Generator: [ Fully symmetric ] 
-( 0.332539164446420624152923823157707, 
-0.332539164446420624152923823157707, 
-0.332539164446420624152923823157707, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.332539164446420624152923823157707,
+0.332539164446420624152923823157707,
+0.332539164446420624152923823157707,
+)
+Corresponding weight:
 10 ^ -3 x 4.89142526307349938479576303671027,
 
-Generator: [ Fully symmetric ] 
-( 0.1, 0.1, 0.2, ) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.1, 0.1, 0.2, )
+Corresponding weight:
 0.0275573192239858906525573192239858,
 
 
 
-Region: Simplex 
-Dimension: 3 
-Degree: 8 
-Points: 43 
-Structure: Fully symmetric 
-Rule struct: 0 0 0 0 0 0 1 3 1 2 0 
-Generator: [ Fully symmetric ] 
-( 0.25, 0.25, 0.25, ) 
-Corresponding weight: 
+Region: Simplex
+Dimension: 3
+Degree: 8
+Points: 43
+Structure: Fully symmetric
+Rule struct: 0 0 0 0 0 0 1 3 1 2 0
+Generator: [ Fully symmetric ]
+( 0.25, 0.25, 0.25, )
+Corresponding weight:
 -0.0205001886586399158405865177642941,
-Generator: [ Fully symmetric ] 
-( 0.206829931610673204083980900024961, 
-0.206829931610673204083980900024961, 
-0.206829931610673204083980900024961, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.206829931610673204083980900024961,
+0.206829931610673204083980900024961,
+0.206829931610673204083980900024961,
+)
+Corresponding weight:
 0.0142503058228669012484397415358704,
 
-Generator: [ Fully symmetric ] 
-( 0.0821035883105467230906058078714215, 
-0.0821035883105467230906058078714215, 
-0.0821035883105467230906058078714215, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.0821035883105467230906058078714215,
+0.0821035883105467230906058078714215,
+0.0821035883105467230906058078714215,
+)
+Corresponding weight:
 10 ^ -3 x 1.96703331313390098756280342445466,
 
-Generator: [ Fully symmetric ] 
-( 10 ^ -3 x 5.78195050519799725317663886414270, 
-10 ^ -3 x 5.78195050519799725317663886414270, 
-10 ^ -3 x 5.78195050519799725317663886414270, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 10 ^ -3 x 5.78195050519799725317663886414270,
+10 ^ -3 x 5.78195050519799725317663886414270,
+10 ^ -3 x 5.78195050519799725317663886414270,
+)
+Corresponding weight:
 10 ^ -4 x 1.69834109092887379837744566704016,
 
-Generator: [ Fully symmetric ] 
-( 0.0505327400188942244256245285579071, 
-0.0505327400188942244256245285579071, 
-0.449467259981105775574375471442092, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.0505327400188942244256245285579071,
+0.0505327400188942244256245285579071,
+0.449467259981105775574375471442092,
+)
+Corresponding weight:
 10 ^ -3 x 4.57968382446728180074351446297276,
 
-Generator: [ Fully symmetric ] 
-( 0.229066536116811139600408854554753, 
-0.229066536116811139600408854554753, 
-0.0356395827885340437169173969506114, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.229066536116811139600408854554753,
+0.229066536116811139600408854554753,
+0.0356395827885340437169173969506114,
+)
+Corresponding weight:
 10 ^ -3 x 5.70448580868191850680255862783040,
 
-Generator: [ Fully symmetric ] 
-( 0.0366077495531974236787738546327104, 
-0.0366077495531974236787738546327104, 
-0.190486041934633455699433285315099, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.0366077495531974236787738546327104,
+0.0366077495531974236787738546327104,
+0.190486041934633455699433285315099,
+)
+Corresponding weight:
 10 ^ -3 x 2.14051914116209259648335300092023,
 
-Region: Simplex 
-Dimension: 3 
-Degree: 9 
-Points: 53 
-Structure: Fully symmetric 
-Rule struct: 0 0 0 0 0 0 1 4 0 3 0 
-Generator: [ Fully symmetric ] 
-( 0.25, 0.25, 0.25, ) 
-Corresponding weight: 
+Region: Simplex
+Dimension: 3
+Degree: 9
+Points: 53
+Structure: Fully symmetric
+Rule struct: 0 0 0 0 0 0 1 4 0 3 0
+Generator: [ Fully symmetric ]
+( 0.25, 0.25, 0.25, )
+Corresponding weight:
 -0.137799038326108641245781827743502,
-Generator: [ Fully symmetric ] 
-( 0.0483510385497367408791638973335652, 
-0.0483510385497367408791638973335652, 
-0.0483510385497367408791638973335652, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.0483510385497367408791638973335652,
+0.0483510385497367408791638973335652,
+0.0483510385497367408791638973335652,
+)
+Corresponding weight:
 10 ^ -3 x 1.86533656908528954751732956352791,
 
-Generator: [ Fully symmetric ] 
-( 0.324579280117882365858796772348839, 
-0.324579280117882365858796772348839, 
-0.324579280117882365858796772348839, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.324579280117882365858796772348839,
+0.324579280117882365858796772348839,
+0.324579280117882365858796772348839,
+)
+Corresponding weight:
 10 ^ -3 x 4.30942396949340069685481460143672,
 
-Generator: [ Fully symmetric ] 
-( 0.114616540223995219683790300317451, 
-0.114616540223995219683790300317451, 
-0.114616540223995219683790300317451, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.114616540223995219683790300317451,
+0.114616540223995219683790300317451,
+0.114616540223995219683790300317451,
+)
+Corresponding weight:
 -0.0901847664812015251273931145424214,
 
-Generator: [ Fully symmetric ] 
-( 0.225489951911513918847703826550363, 
-0.225489951911513918847703826550363, 
-0.225489951911513918847703826550363, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.225489951911513918847703826550363,
+0.225489951911513918847703826550363,
+0.225489951911513918847703826550363,
+)
+Corresponding weight:
 0.0446725762025114446937850368088403,
 
-Generator: [ Fully symmetric ] 
-( 0.131627809246869809838976179197822, 
-0.131627809246869809838976179197822, 
-0.0836647016171849679665385541714202, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.131627809246869809838976179197822,
+0.131627809246869809838976179197822,
+0.0836647016171849679665385541714202,
+)
+Corresponding weight:
 0.0347004058845507618227002576570271,
 
-Generator: [ Fully symmetric ] 
-( 0.433951461411406772411426685800524, 
-0.433951461411406772411426685800524, 
-0.107769859549428611825218473500043, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 0.433951461411406772411426685800524,
+0.433951461411406772411426685800524,
+0.107769859549428611825218473500043,
+)
+Corresponding weight:
 10 ^ -3 x 3.35258390266064697010720483063291,
 
-Generator: [ Fully symmetric ] 
-( 10 ^ -3 x -1.37627731813820071002030321419028, 
-10 ^ -3 x -1.37627731813820071002030321419028, 
-0.276553472636807342120192082186261, 
-) 
-Corresponding weight: 
+Generator: [ Fully symmetric ]
+( 10 ^ -3 x -1.37627731813820071002030321419028,
+10 ^ -3 x -1.37627731813820071002030321419028,
+0.276553472636807342120192082186261,
+)
+Corresponding weight:
 10 ^ -4 x 4.31628875556996929641889902726182,
 
 
@@ -629,37 +629,36 @@ void GQuadratureFormular<Rd>::Verification()
   const double tol=1.e-12;
   R err=0;
   R a[d+1],h;
-  
+
   for (int k=0;k<=exact;  k++)
     {
 
-      //  formule magic: int_K  \lamda^k =   d! k! / ( d+k)! 
-      
+      //  formule magic: int_K  \lamda^k =   d! k! / ( d+k)!
+
       R sa[d+1];
-      for(int l=0;l<=d;++l)	      
+      for(int l=0;l<=d;++l)
 	sa[l]=0.;
-     
+
       for (int j=0;j<n;j++)
 	{
 	  h = p[j];
 	  Rd P = p[j];
-	  
-	  for(int l=0;l<d;++l)	      
+
+	  for(int l=0;l<d;++l)
 	    a[l]=p[j][l];
 	  a[d] = 1.-p[j].sum();
-	  
-	  for(int l=0;l<=d;++l)	      	  
-	    sa[l]+=h*pow(a[l],k);  
+
+	  for(int l=0;l<=d;++l)
+	    sa[l]+=h*pow(a[l],k);
 	}
-      
-      R se(1),see(1);
-      for (int i=1;i<=k;i++) 
+
+      R se(1);
+      for (int i=1;i<=k;i++)
 	se *= (R) i / (R) (i+d);
-      see=se;
       
       for(int l=0;l<=d;++l)
 	err = Max(err,Abs(se-sa[l]));
-      
+
       if (err>tol)
 	{
 	  cerr << " d= " << d << "T Ordre= " << k << " d!k!/(d+k)!= " << se << " " ;
@@ -668,14 +667,14 @@ void GQuadratureFormular<Rd>::Verification()
 	  cerr << " err= " << err << endl;
 	}
     }
-  
+
   if(err>tol)
     {
-      cerr << "Erreur dans la formule d'integration d=" <<d  << " exact = " << exact 
+      cerr << "Erreur dans la formule d'integration d=" <<d  << " exact = " << exact
 	   << " Nb Point = " << n << endl;
       assert(0);
     }
-    
+
 }
 /*
   from:
@@ -686,26 +685,26 @@ typedef GQuadratureFormular<R3>  PQF3;
 // 2 4 (formule 2)
 // A.H. Stroud, Approximate calculation of multiple integrals, Prentice-Hall, Englewood Cliffs, N.J., 1971.
 // JavaScript:formule('t3-2-4b')
-    
+
     PQP3  QF_TET_1[]=
-    { 
+    {
     PQP3(R3(0.25,0.25,0.25), 1)
     };
     PQF3 const QuadratureFormular_Tet_1(1,1,QF_TET_1);
- 
-    
+
+
     PQP3  QF_TET_1lump[]=
-    { 
+    {
     PQP3(R3(0,0,0),0.25),
     PQP3(R3(1.,0,0),0.25),
     PQP3(R3(0,1.,0),0.25),
     PQP3(R3(0,0,1.),0.25),
     };
     PQF3 const QuadratureFormular_Tet_1lump(1,4,QF_TET_1lump);
-    
-    
+
+
 PQP3  QF_TET_2[]=
-  { 
+  {
      PQP3(R3(0.58541019662496845446137605030968, 0.138196601125010515179541316563436, 0.138196601125010515179541316563436), 0.25),
      PQP3(R3(0.138196601125010515179541316563436,  0.58541019662496845446137605030968, 0.138196601125010515179541316563436), 0.25),
      PQP3(R3(0.138196601125010515179541316563436, 0.138196601125010515179541316563436,  0.58541019662496845446137605030968),0.25),
@@ -715,10 +714,10 @@ PQP3  QF_TET_2[]=
 // 5  14  (formule 1)
 /*
 GM78
-A. Grundmann and H.M. Möller, Invariant integration formulas for the n-simplex by combinatorial methods, SIAM J. Numer. Anal. 15 (1978), 282--290.
+A. Grundmann and H.M. Mï¿½ller, Invariant integration formulas for the n-simplex by combinatorial methods, SIAM J. Numer. Anal. 15 (1978), 282--290.
  */
 PQP3  QF_TET_5[]=
-   { 
+   {
      PQP3(R3(0.7217942490673263207930282587889082 , 0.0927352503108912264023239137370306 , 0.0927352503108912264023239137370306) , 0.0122488405193936582572850342477212*6.),
      PQP3(R3(0.0927352503108912264023239137370306 , 0.7217942490673263207930282587889082 , 0.0927352503108912264023239137370306) , 0.0122488405193936582572850342477212*6.),
      PQP3(R3(0.0927352503108912264023239137370306 , 0.0927352503108912264023239137370306 , 0.7217942490673263207930282587889082) , 0.0122488405193936582572850342477212*6.),
@@ -741,11 +740,11 @@ PQP3  QF_TET_5[]=
   template<> const GQuadratureFormular<R2> * GQuadratureFormular<R2>::Default= & QuadratureFormular_T_5;
   template<> const GQuadratureFormular<R3> * GQuadratureFormular<R3>::Default= & QuadratureFormular_Tet_5;
 
-    // Instanciation explicite of icpc   compiler  Version 11.1   (FH  oct 2010) 
+    // Instanciation explicite of icpc   compiler  Version 11.1   (FH  oct 2010)
     template void  GQuadratureFormular<R1>::Verification();
     template void  GQuadratureFormular<R2>::Verification();
     template void  GQuadratureFormular<R3>::Verification();
-    
-   
-    
+
+
+
 } // end namespace Fem2D
