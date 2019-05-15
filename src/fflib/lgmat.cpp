@@ -550,7 +550,6 @@ AnyType SetMatrixInterpolationS(Stack,Expression ,Expression);
 template<class R>
 void BuildCombMat(MatriceMorse<R> & mij,const KNM_<R> & A, int ii00=0,int jj00=0,R coef=R(1.),bool cnj=false)
 {
-  double eps0=numeric_limits<double>::min();
   int i,j;
   int n = A.N(),m=A.M();
   for ( i=0;i<n;i++)
@@ -755,7 +754,6 @@ MatriceMorse<R> * buildInterpolationMatrix(const FESpace3 & Uh,const FESpace3 & 
     m = new MatriceMorse<R>(n,mm);
     RdHat Gh= RdHat::diag(1./(RdHat::d+1));
     Rd G;
-    int n1=n+1;
     const  Mesh & ThU =Uh.Th; // line
     const  Mesh & ThV =Vh.Th; // colunm
     bool samemesh =  &Uh.Th == &Vh.Th;  // same Mesh
@@ -919,7 +917,6 @@ MatriceMorse<R> * buildInterpolationMatrix(const FESpaceS & Uh,const FESpaceS & 
   m = new MatriceMorse<R>(n,mm);
   RdHat Gh= RdHat::diag(1./(RdHat::d+1));
   RdHat G;
-  int n1=n+1;
   const  Mesh & ThU =Uh.Th; // line
   const  Mesh & ThV =Vh.Th; // colunm
   bool samemesh =  &Uh.Th == &Vh.Th;  // same Mesh
@@ -1177,7 +1174,6 @@ MatriceMorse<R> *  buildInterpolationMatrix1(const FESpace3 & Uh,const KN_<doubl
     What_d whatd= 1 <<op;
     KN<bool> fait(Uh.NbOfDF);
     fait=false;
-   // map< pair<int,int> , double > sij;
      MatriceMorse<R> * m = new MatriceMorse<R>(n,mm);
     Rd Phat;
     bool outside;

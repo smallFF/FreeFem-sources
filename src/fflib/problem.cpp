@@ -1224,7 +1224,7 @@ namespace Fem2D {
                 {
                     tu= Thu.Find(P,Ptu,outsideu);
                     if( !tu ||  outsideu) {
-                        if(verbosity>100) cout << " On a pas trouver (u) " << P << " " << endl;
+                        if(verbosity>100) cout << " On a pas trouvé (u) " << P << " " << endl;
                         continue;}}
                 if(same)
                 {
@@ -1243,7 +1243,7 @@ namespace Fem2D {
                     {
                         tv= Thv.Find(P,Ptv,outsidev);
                         if( !tv || outsidev) {
-                            if(verbosity>100) cout << " On a pas trouver (v) " << P << " " << endl;
+                            if(verbosity>100) cout << " On a pas trouvé (v) " << P << " " << endl;
                             continue;
                         }}
                 }
@@ -2960,7 +2960,6 @@ namespace Fem2D {
     {
         Stack stack=pvoid2Stack(vstack);
         typedef  FElement3::Element Element;
-        MeshPoint mp= *MeshPointStack(stack);
         R ** copt = Stack_Ptr<R*>(stack,ElemMatPtrOffset);
 
         bool same = &Ku == & Kv;

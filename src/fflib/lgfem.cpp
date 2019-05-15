@@ -3505,7 +3505,7 @@ int Send2d(PlotStream & theplot,Plot::ListWhat & lli,map<const typename v_fes::F
     int cmp[3]={-1,-1,-1};
     int err=1;
     long what=lli.what;
-    int lg,nsb;
+    int lg,nsb=0;
     lli.eval(fe,cmp);
     if (fe[0]->x() && what %10 ==1)
 	{

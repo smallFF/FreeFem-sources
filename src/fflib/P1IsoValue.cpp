@@ -74,7 +74,7 @@ inline void pen23tet(R3 P[6],R3 Q[3][4])
 }
 int UnderIso(double *f,R2 Q[2][3] ,double area2[2],  double eps)
 {
- 
+
     const R2 *K = R2::KHat;
     const  int p1[]= {1,2,0};
     const  int p2[]= {2,0,1};
@@ -96,9 +96,9 @@ int UnderIso(double *f,R2 Q[2][3] ,double area2[2],  double eps)
         return 1;
     }; //  full triz ..
 
-    int np[4],nm[4];
+    int np[4]={},nm[4]={};
     int km=0,kp=0;
-    
+
     int ntria=0;
     for (int i=0;i<3;++i)
     {
@@ -145,9 +145,9 @@ int UnderIso(double *f,R2 Q[2][3] ,double area2[2],  double eps)
         //cout <<area2[k] << endl;
         assert(area2[k] >= - eps);
     }
-    
+
     return ntria;
-   
+
 }
 int UnderIso(double *f,R3 Q[3][4] ,double vol6[3],  double eps)
 {
@@ -174,14 +174,14 @@ int UnderIso(double *f,R3 Q[3][4] ,double vol6[3],  double eps)
         vol6[0]=1;
         return 1;
     }; //  full tet ..
-    
+
   // hard case ..
 // count number
     vol6[0]=1;
-   
+
     int np[4],nm[4];
     int km=0,kp=0;
-    
+
     int ntet=0;
     for (int i=0;i<4;++i)
     {
@@ -212,7 +212,7 @@ int UnderIso(double *f,R3 Q[3][4] ,double vol6[3],  double eps)
         int k1=np[1];
         if(signe_permutation(i0,i1,k0,k1)<0)
             std::swap(k0,k1);
-            
+
         R3 P[6];
         P[0]=K[i0];
         P[1]=bary(K,f,i0,k0,v);
@@ -221,7 +221,7 @@ int UnderIso(double *f,R3 Q[3][4] ,double vol6[3],  double eps)
         P[4]=bary(K,f,i1,k0,v);
         P[5]=bary(K,f,i1,k1,v);
         pen23tet(P,Q);
-        
+
     }
     else if( km == 3)
     { // prisme
@@ -239,7 +239,7 @@ int UnderIso(double *f,R3 Q[3][4] ,double vol6[3],  double eps)
         P[1]=bary(K,f,i2,k0,v);
         P[2]=bary(K,f,i3,k0,v);
         pen23tet(P,Q);
-        
+
 
     }
     else if( km == 4)
@@ -265,9 +265,9 @@ int UnderIso(double *f,R3 Q[3][4] ,double vol6[3],  double eps)
 
 int IsoLineK(double *f,Fem2D::R3 *Q, double eps)
 {
-    
+
     static const int  nvfaceTet[4][3]  ={{3,2,1}, {0,2,3},{ 3,1,0},{ 0,1,2}}  ;
-    
+
     const R3 *K=R3::KHat;
     int kv=0,vk[4],tv[4],kf;
     for(int i=0;i<4;++i)
@@ -290,15 +290,15 @@ int IsoLineK(double *f,Fem2D::R3 *Q, double eps)
         Q[0]=K[nvfaceTet[kf][0]];
         Q[1]=K[nvfaceTet[kf][i1]];
         Q[2]=K[nvfaceTet[kf][i2]];
-        
+
         return (f[kf] >0) ? 3:0;// to take one fulL face not to times ...
     }
 
     R v=0;
     int nP=0;
-    int np[4],nm[4],nps[4],nms[4];;
+    int np[4]={},nm[4]={},nps[4]={},nms[4]={};
     int km=0,kp=0,kms=0,kps=0;
-    
+
     for (int i=0;i<4;++i)
     {
         if(f[i]<=v+eps) nm[km++]=i;
@@ -307,7 +307,7 @@ int IsoLineK(double *f,Fem2D::R3 *Q, double eps)
         if(f[i]<v-eps) nms[kms++]=i;
         if(f[i]>v+eps) nps[kps++]=i;
     }
-    
+
     //  cout << "IsoLineK: km kp "<< km << " " << kp << endl;
     int h=-1,b[3];
     if(kps==1 && km==3)
@@ -341,7 +341,7 @@ int IsoLineK(double *f,Fem2D::R3 *Q, double eps)
         Q[2]=bary(K,f,h,b[2],v);
         nP=3;
     }
-    
+
     return nP;
 }
 
@@ -350,7 +350,7 @@ int IsoLineK(double *f,Fem2D::R2 *Q, double eps)
     int debug=0;
     R2 P[3]={ R2(0.,0.),R2(1.,0.),R2(0.,1.)};
     int kv=0,ke=0,e=3;
-    int tv[3],te[3],vk[3],i0[3],i1[3];
+    int tv[3],te[3],vk[3],i0[3]={},i1[3]={};
     for(int i=0;i<3;++i)
     {
         if( abs(f[i]) <= eps) {
@@ -375,7 +375,7 @@ int IsoLineK(double *f,Fem2D::R2 *Q, double eps)
                 //return 10+e ; // edge number + 10
             }
             else return 0; // skip edge ...
-            
+
         }
         else return 0; //  const funct...
     }
@@ -404,7 +404,7 @@ int IsoLineK(double *f,Fem2D::R2 *Q, double eps)
         // Warning   no trivail case ..  make a plot to see
         //  with is good
         // the first edge must be
-        
+
         if(te[0]<3)  // oriente the line
         {
             assert(te[1] >=3);
