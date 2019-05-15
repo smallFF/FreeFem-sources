@@ -58,12 +58,12 @@
 #include <setjmp.h>
 #include <fcntl.h>
 
- 
+
 /*
- * [Bruno] include the headers with the prototypes for 
- *  open()/close()/write()/lseek() 
- *  and define the constants to be used to open() a file. 
- *   Under Windows, 
+ * [Bruno] include the headers with the prototypes for
+ *  open()/close()/write()/lseek()
+ *  and define the constants to be used to open() a file.
+ *   Under Windows,
  *  1)   _O_BINARY should be set in the flags.
  *  2) 'mode' has a completely different meaning
  */
@@ -75,8 +75,8 @@
 #define OPEN_READ_FLAGS   O_RDONLY
 #define OPEN_WRITE_FLAGS  O_CREAT | O_WRONLY | O_TRUNC
 #define OPEN_READ_MODE    0666
-#define OPEN_WRITE_MODE   0666   
-   
+#define OPEN_WRITE_MODE   0666
+
 #elif defined(WIN32) || defined(_WIN64)
 
 #define GMF_WINDOWS
@@ -90,7 +90,7 @@
 #define OPEN_READ_FLAGS    O_RDONLY | _O_BINARY
 #define OPEN_WRITE_FLAGS   O_CREAT | O_WRONLY | O_TRUNC | _O_BINARY
 #define OPEN_READ_MODE     _S_IREAD
-#define OPEN_WRITE_MODE    _S_IREAD | S_IWRITE 
+#define OPEN_WRITE_MODE    _S_IREAD | S_IWRITE
 
 #endif
 
@@ -226,7 +226,7 @@ typedef struct
 /* Global variables                                                           */
 /*----------------------------------------------------------------------------*/
 
-const char *GmfKwdFmt[ GmfMaxKwd + 1 ][3] = 
+const char *GmfKwdFmt[ GmfMaxKwd + 1 ][3] =
 {
    {"Reserved",                                 "", ""},
    {"MeshVersionFormatted",                     "", "i"},
@@ -624,9 +624,9 @@ int64_t GmfOpenMesh(const char *FilNam, int mod, ...)
          longjmp(msh->err, -1);
 
       // Create the mesh file
-      if(msh->typ & Bin) 
+      if(msh->typ & Bin)
       {
-         /* 
+         /*
           * [Bruno] replaced previous call to creat():
           * with a call to open(), because Windows needs the
           * binary flag to be specified.
@@ -751,7 +751,7 @@ int64_t GmfStatKwd(int64_t MshIdx, int KwdCod, ...)
       {
          PtrDeg = va_arg(VarArg, int *);
          *PtrDeg = kwd->deg;
-         
+
          PtrNmbNod = va_arg(VarArg, int *);
          *PtrNmbNod = kwd->NmbNod;
       }
@@ -948,7 +948,7 @@ int NAMF77(GmfGetLin, gmfgetlin)(TYPF77(int64_t)MshIdx, TYPF77(int)KwdCod, ...)
                      PtrDbl = va_arg(VarArg, double *);
                      PtrFlt = (float *)PtrDbl;
                      *PtrFlt = FltVal;
-                  }                     
+                  }
                   else
                   {
                      safe_fscanf(msh->hdl, "%lf",
@@ -1565,7 +1565,7 @@ int NAMF77(GmfGetBlock, gmfgetblock)(  TYPF77(int64_t) MshIdx,
                FilBuf = FrtBuf;
             }
          }
- 
+
          // Read a chunk of data except for the last loop interarion
          if(b <= NmbBlk)
          {
@@ -1725,7 +1725,7 @@ int NAMF77(GmfSetBlock, gmfsetblock)(  TYPF77(int64_t) MshIdx,
                                        void           *MapTab,
                                        void           *prc, ... )
 {
-   char        *UsrDat[ GmfMaxTyp ], *UsrBas[ GmfMaxTyp ], *EndUsrDat;
+   char        *UsrDat[ GmfMaxTyp ]={}, *UsrBas[ GmfMaxTyp ], *EndUsrDat;
    char        *StrTab[5] = { "", "%g", "%.15g", "%d", "%lld" }, *FilPos;
    char        *FilBuf = NULL, *FrtBuf = NULL, *BckBuf = NULL;
    int         i, j, LinSiz, *FilPtrI32, *UsrPtrI32, FilTyp[ GmfMaxTyp ];
@@ -1969,7 +1969,7 @@ int NAMF77(GmfSetBlock, gmfsetblock)(  TYPF77(int64_t) MshIdx,
          if(b)
          {
             aio.aio_nbytes = BlkNmbLin * LinSiz;
-            
+
             if(aio_write(&aio) == -1)
             {
 #ifdef WITH_AIO
@@ -2592,18 +2592,18 @@ static void RecBlk(GmfMshSct *msh, const void *blk, int siz)
        */
 #ifdef WITH_AIO
       if((int64_t)write(msh->FilDes, msh->blk, (int)msh->pos) != msh->pos)
-#else      
+#else
       if(fwrite(msh->blk, 1, (size_t)msh->pos, msh->hdl) != msh->pos)
-#endif      
+#endif
          longjmp(msh->err, -1);
-#else      
+#else
 #ifdef WITH_AIO
       if(write(msh->FilDes, msh->blk, msh->pos) != msh->pos)
-#else      
+#else
       if(fwrite(msh->blk, 1, msh->pos, msh->hdl) != msh->pos)
-#endif      
+#endif
          longjmp(msh->err, -1);
-#endif      
+#endif
       msh->pos = 0;
    }
 }
