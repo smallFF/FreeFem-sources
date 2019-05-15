@@ -1,5 +1,5 @@
 #ifdef __APPLE__
-#define GL_SILENCE_DEPRECATION 
+#define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
@@ -243,13 +243,16 @@ void drawisoTet(const R3 K[4],R f[4],R v)
     int nP=0;
     int np[4]={},nm[4]={};
     int km=0,kp=0;
+    memset(nm, 0, sizeof(int) * 4);
+    memset(np, 0, sizeof(int) * 4);
     for (int i=0;i<4;++i)
     {
         if(f[i]<=v) nm[km++]=i;
         if(f[i]>=v) np[kp++]=i;
     }
 
-    int h=-1,b[3]={};
+    int h=-1,b[3];
+    memset(b, 0, sizeof(int) * 3);
     if(kp==1 && km==3)
     {
         h = np[0];
